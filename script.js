@@ -27,7 +27,7 @@ class Player {
     }
 
     update(){
-
+        
     }
 }
 

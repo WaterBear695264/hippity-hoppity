@@ -1,5 +1,3 @@
-let width = windowWidth;
-let height = windowHeight;
 class Player {
     constructor(y, dead, money, jumpHeight, speed, name, level, xp){
         this.y = y;
@@ -22,12 +20,12 @@ class Player {
         this.yVel+=10
     }
 
-    draw(){
-        image(img, width, height)
+    draw(image){
+        image(image, width, height)
     }
 
     update(){
-        
+
     }
 }
 
@@ -46,12 +44,21 @@ class Egg {
 
 function preload() {
     img = loadImage('/image-removebg-preview.png')
+    background = loadImage('/background.jpg')
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight - 50);
+  let width = windowWidth;
+  let height = windowHeight;
+  createCanvas(width, height - 50);
+
 }
 
+    let x = 0;
 function draw() {
-  background(240); // Light gray background
+    x+=10;
+    let newX = x%width
+    clear();
+    image(background, -newX, 0, width, height);
+    image(background, width-newX, 0, width, height);
 }

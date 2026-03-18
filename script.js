@@ -17,7 +17,7 @@ class Player {
     }
 
     draw(){
-
+        Image(width, height, )
     }
 }
 
@@ -34,3 +34,10 @@ class Egg {
 
 }
 
+function setup() {
+  createCanvas(windowWidth, windowHeight - 50);
+}
+
+function draw() {
+  background(240); // Light gray background
+}

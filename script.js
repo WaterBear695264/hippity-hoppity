@@ -10,14 +10,24 @@ class Player {
         this.name = name;
         this.level = level;
         this.xp = xp;
+        this.yVel = 0;
+        this.onGround = true;
     }
 
     move(speed){
         this.y+=speed;
     }
 
+    jump(){
+        this.yVel+=10
+    }
+
     draw(){
-        Image(width, height, )
+        image(img, width, height)
+    }
+
+    update(){
+
     }
 }
 
@@ -32,6 +42,10 @@ class Egg {
     }
 
 
+}
+
+function preload() {
+    img = loadImage('/image-removebg-preview.png')
 }
 
 function setup() {

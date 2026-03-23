@@ -1,6 +1,3 @@
-let screenSpeed = 10;
-let mainCharacter = new Player(100, false, 0, 100, 100, "john", 0, 0);
-
 class Player {
     constructor(y, dead, money, jumpHeight, speed, name, level, xp, gravity){
         this.y = y;
@@ -76,18 +73,22 @@ class Spike {
 }
 
 class spikeArrangement {
-    constructor(numSpikes, arrOfSize, x){
+    constructor(numSpikes, arrOfSize, x, y, width, height){
         this.numSpikes = numSpikes;
         this.arrOfSize = arrOfSize;
         this.arrOfSpikes = [];
         this.x = x;
         this.y = y;
+        this.width = width;
+        this.height = height;
     }
 
     createArr(){
-        for(let i = 0; i < this.arrOfSize; i++){
+        let offset = 0; 
+        for(let i = 0; i < this.arrOfSize.length; i++){
             if(i!== 0){
-                this.arrOfSpikes.push(new Spike(this.x + this.arrOfSize[i-1], this.y, this.height*this.arrOfSize[i], this.width*this.arrOfSize[i]))
+                offset += this.width*this.arrOfSize[i-1]
+                this.arrOfSpikes.push(new Spike(this.x + offset, this.y, this.height*this.arrOfSize[i], this.width*this.arrOfSize[i]))
             }else{
                 this.arrOfSpikes.push(new Spike(this.x, this.y, this.height*this.arrOfSize[i], this.width*this.arrOfSize[i]))
             }
@@ -95,6 +96,11 @@ class spikeArrangement {
         }
     }
 
+    updateSpikes(img){
+        for(let i = 0; i < this.arrOfSpikes.length; i++){
+            this.arrOfSpikes[i].update(img)
+        }
+    }
 
 }
 
@@ -119,7 +125,28 @@ function preload() {
     background = loadImage('/background.jpg')
 }
 
-function spawnSpikes(random){
+function spawnSpikes(arr, random){
+    if(random < 0.5){
+        let spikeArrange = new spikeArrangement(4, [0.7, 2, 2, 0.7], width*1.4, height*3/4, width/30, height/15);
+        spikeArrange.createArr()
+        arr.push(spikeArrange)
+    }
+}
+
+function deleteSpikes(arr){
+    for(let i = 0; i < arr.length; i++){
+        if(arr[i].x < 0){
+            arr.splice(i, 1)
+        }
+    }
+}
+
+function updateAllSpikes(arr, img){
+    if(arr[0] !== undefined){
+    for(let i = 0; i < arr.length; i++){
+        arr[i].updateSpikes(img);
+    }
+}
 }
 
 function setup() {
@@ -129,17 +156,29 @@ function setup() {
 
 }
 
+    let screenSpeed = 10;
+    let mainCharacter = new Player(100, false, 0, 100, 100, "john", 0, 0);
     let x = 0;
     let spike = new Spike(1000, 100, 100, 100)
+    let spikeArray = [];
+    let score = 0;
+
 function draw() {
+    let rand = random(0, 10)
     x+=screenSpeed ;
     let newX = x % width
     clear();
+    console.log(spikeArray)
     image(background, -newX, 0, width, height);
     image(background, width-newX, 0, width, height);
     mainCharacter.update(img)
+    spawnSpikes(spikeArray, rand);
+    updateAllSpikes(spikeArray, img);
+    deleteSpikes(spikeArray)
     spike.y = height*3/4
     spike.update(img)
+    score++; 
+    text('SCORE: ' + score, 50, 50);
 
 }
 

@@ -33,9 +33,9 @@ class Player {
         this.y += this.yVel;
 
         // Ground collision (height - 150 accounts for sprite size)
-        let groundY = height *3/4; 
-        if (this.y >= groundY) {
-            this.y = groundY;
+        let groundY = height *5/6; 
+        if (this.y >= groundY- 80) {
+            this.y = groundY-80;
             this.yVel = 0;
             this.onGround = true;
         }else{
@@ -88,9 +88,9 @@ class spikeArrangement {
         for(let i = 0; i < this.arrOfSize.length; i++){
             if(i!== 0){
                 offset += this.width*this.arrOfSize[i-1]
-                this.arrOfSpikes.push(new Spike(this.x + offset, this.y, this.height*this.arrOfSize[i], this.width*this.arrOfSize[i]))
+                this.arrOfSpikes.push(new Spike(this.x + offset, this.y - this.height*this.arrOfSize[i], this.height*this.arrOfSize[i], this.width*this.arrOfSize[i]))
             }else{
-                this.arrOfSpikes.push(new Spike(this.x, this.y, this.height*this.arrOfSize[i], this.width*this.arrOfSize[i]))
+                this.arrOfSpikes.push(new Spike(this.x, this.y - this.height*this.arrOfSize[i], this.height*this.arrOfSize[i], this.width*this.arrOfSize[i]))
             }
             
         }
@@ -123,11 +123,13 @@ function dash(distance){
 function preload() {
     img = loadImage('/image-removebg-preview.png')
     background = loadImage('/background.jpg')
+    spikeImage = loadImage('/spike.png')
+    rabbit = loadImage('/rabbit.png')
 }
 
 function spawnSpikes(arr, random){
-    if(random < 0.5){
-        let spikeArrange = new spikeArrangement(4, [0.7, 2, 2, 0.7], width*1.4, height*3/4, width/30, height/15);
+    if(random < 0.05){
+        let spikeArrange = new spikeArrangement(4, [1, 1, 1, 1], width*1.4, height*5/6, width/30, height/15);
         spikeArrange.createArr()
         arr.push(spikeArrange)
     }
@@ -135,7 +137,7 @@ function spawnSpikes(arr, random){
 
 function deleteSpikes(arr){
     for(let i = 0; i < arr.length; i++){
-        if(arr[i].x < 0){
+        if(arr[i].arrOfSpikes[0].x < height*(-1/2)){
             arr.splice(i, 1)
         }
     }
@@ -147,6 +149,15 @@ function updateAllSpikes(arr, img){
         arr[i].updateSpikes(img);
     }
 }
+}
+
+function checkCollisions(arr, mainCharacter){
+    for(let i = 0; i < arr.lenth; i++){
+        let spikes = arr[i].arrOfSpikes;
+        for(let j = 0; j < spikes.length;i ++){
+            if(spikes[i].x < mainCharacter.x && mainCharacter.y < )
+        }
+    }
 }
 
 function setup() {
@@ -171,11 +182,11 @@ function draw() {
     console.log(spikeArray)
     image(background, -newX, 0, width, height);
     image(background, width-newX, 0, width, height);
-    mainCharacter.update(img)
+    mainCharacter.update(rabbit)
     spawnSpikes(spikeArray, rand);
-    updateAllSpikes(spikeArray, img);
+    updateAllSpikes(spikeArray, spikeImage);
     deleteSpikes(spikeArray)
-    spike.y = height*3/4
+    spike.y = height*3/4 
     spike.update(img)
     score++; 
     text('SCORE: ' + score, 50, 50);

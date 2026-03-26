@@ -27,8 +27,8 @@ class Player {
 
     }
 
-    draw(img){
-        image(img, this.x, this.y, this.width, this.height)
+    draw(arr,frame){
+        image(arr[frame%4], this.x, this.y, this.width, this.height)
     }
 
     applyPhysics() {
@@ -47,9 +47,9 @@ class Player {
         }
     }
 
-    update(img){
+    update(arr, frame){
         if(!this.dead){
-        this.draw(img);
+        this.draw(arr, frame);
         this.applyPhysics()
         }
     }
@@ -132,7 +132,10 @@ function preload() {
     img = loadImage('/image-removebg-preview.png')
     backgroundImage = loadImage('/background.jpg')
     spikeImage = loadImage('/spike.png')
-    rabbit = loadImage('/rabbit.png')
+    rabbit1 = loadImage('/rabbit1.png')
+    rabbit2 = loadImage('/rabbit2.png')
+    rabbit3 = loadImage('/rabbit3.png')
+    rabbit4 = loadImage('/rabbit4.png')
 }
 
 function spawnSpikes(arr, random, timer, score){
@@ -210,6 +213,7 @@ function setup() {
     restartButton.size(80, 40);
     restartButton.mousePressed(restartGame);
     restartButton.hide();
+    rabbitAn = [rabbit1, rabbit2, rabbit3, rabbit4];
 }
     let screenSpeed = 10;
     let x = 0;
@@ -219,6 +223,7 @@ function setup() {
     let timer = 0;
     let restartButton;
     let deathScreen = false;
+  
 function draw() {
     let rand = Math.floor(random(0, 100))
     if(mainCharacter.dead){
@@ -229,11 +234,12 @@ function draw() {
         score++; 
 
     }
+    let frameUpdate = Math.floor(score/10)
     let newX = x % width
     clear();
     image(backgroundImage, -newX, 0, width, height);
     image(backgroundImage, width-newX, 0, width, height);
-    mainCharacter.update(rabbit)
+    mainCharacter.update(rabbitAn, frameUpdate)
     mainCharacter.x = width/4;
     timer = spawnSpikes(spikeArray, rand, timer, score);
     updateAllSpikes(spikeArray, spikeImage);

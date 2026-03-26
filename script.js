@@ -178,11 +178,13 @@ function updateAllSpikes(arr, img){
 }
 }
 
-function deathScreenDisplay(){
+function deathScreenDisplay(score){
     if(deathScreen){
         background(300)
         textSize(width/50)
-        text('YOU ARE DEAD', width/2-width/50, height/2);
+        textSize(32);
+        textAlign(CENTER, CENTER);
+        text('YOU ARE DEAD, Score: ' + score, width/2, height/2);
         restartButton.show()
     }
 }
@@ -238,7 +240,7 @@ function draw() {
     checkCollisions(spikeArray, mainCharacter)
     deleteSpikes(spikeArray)
     text('SCORE: ' + score, 50, 50);
-    deathScreenDisplay()
+    deathScreenDisplay(score)
 }
 
 function restartGame(){

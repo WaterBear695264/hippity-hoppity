@@ -95,9 +95,11 @@ class spikeArrangement {
     createArr(){
         let offset = 0; 
         for(let i = 0; i < this.arrOfSize.length; i++){
-            if(i!== 0){
+            if(i!== 0 && this.arrOfSize[i]!== "e"){
                 offset += this.width*this.arrOfSize[i-1]
                 this.arrOfSpikes.push(new Spike(this.x + offset, this.y - this.height*this.arrOfSize[i], this.height*this.arrOfSize[i], this.width*this.arrOfSize[i]))
+            }else if(i!== 0 && this.arrOfSize[i] === "e"){
+                this.arrOfSize[i] = 1
             }else{
                 this.arrOfSpikes.push(new Spike(this.x, this.y - this.height*this.arrOfSize[i], this.height*this.arrOfSize[i], this.width*this.arrOfSize[i]))
             }
@@ -125,26 +127,33 @@ class Egg {
 
 }
 
-function dash(distance){
-
-}
 
 function preload() {
     img = loadImage('/image-removebg-preview.png')
-    background = loadImage('/background.jpg')
+    backgroundImage = loadImage('/background.jpg')
     spikeImage = loadImage('/spike.png')
     rabbit = loadImage('/rabbit.png')
 }
 
-function spawnSpikes(arr, random, timer){
+function spawnSpikes(arr, random, timer, score){
     timer++;
-    if(random === 0 && timer > 150){
+    if(random === 0 && timer > 75 - score/1000){
         let spikeArrange = new spikeArrangement(4, [1, 1, 1, 1], width*1.4, height*5/6, width/30, height/15);
         spikeArrange.createArr()
         arr.push(spikeArrange)
         timer = 0;
-    }else if(random === 1 && timer > 150){
+    }else if(random === 1 && timer > 75 - score/1000){
         let spikeArrange = new spikeArrangement(4, [0.7, 2, 2, 0.7], width*1.4, height*5/6, width/30, height/15);
+        spikeArrange.createArr()
+        arr.push(spikeArrange)
+        timer = 0;
+    }else if(random === 2 && timer > 75 - score/1000){
+        let spikeArrange = new spikeArrangement(4, [2, 2, 0.7, 0.7], width*1.4, height*5/6, width/30, height/15);
+        spikeArrange.createArr()
+        arr.push(spikeArrange)
+        timer = 0;
+    }else if(random === 3 && timer > 75- score/1000){
+        let spikeArrange = new spikeArrangement(4, [2, 2, 2, 2], width*1.4, height*5/6, width/30, height/15);
         spikeArrange.createArr()
         arr.push(spikeArrange)
         timer = 0;
@@ -169,13 +178,23 @@ function updateAllSpikes(arr, img){
 }
 }
 
+function deathScreenDisplay(){
+    if(deathScreen){
+        background(300)
+        textSize(width/50)
+        text('YOU ARE DEAD', width/2-width/50, height/2);
+        restartButton.show()
+    }
+}
+
 function checkCollisions(arr, mainCharacter){
     for(let i = 0; i < arr.length; i++){
         let spikes = arr[i].arrOfSpikes;
         for(let j = 0; j < spikes.length;j++){
             let spike = spikes[j];
-            if(mainCharacter.x < spike.x + spike.width && mainCharacter.x + mainCharacter.width*3/5 > spike.x && mainCharacter.y < spike.y + spike.height && mainCharacter.y + mainCharacter.height*3/5 > spike.y){
+            if(mainCharacter.x < spike.x + spike.width*3.5/5 && mainCharacter.x + mainCharacter.width*3/5 > spike.x + spike.width*1.5/5 && mainCharacter.y < spike.y + spike.height*3/5 && mainCharacter.y + mainCharacter.height*3/5 > spike.y + spike.height*1.5/5){
                 mainCharacter.dead = true;
+                deathScreen = true;
             }
         }
     }
@@ -184,6 +203,11 @@ function checkCollisions(arr, mainCharacter){
 function setup() {
   createCanvas(windowWidth, windowHeight - 50);
     mainCharacter = new Player(100, 100, false, 0, height/60, 0, "asdfasdf", 0, 0, width/10, height/10)
+    restartButton = createButton('Respawn');
+    restartButton.position(width/2 - 40, height/2 + 40);
+    restartButton.size(80, 40);
+    restartButton.mousePressed(restartGame);
+    restartButton.hide();
 }
     let screenSpeed = 10;
     let x = 0;
@@ -191,26 +215,46 @@ function setup() {
     let spikeArray = [];
     let score = 0;
     let timer = 0;
+    let restartButton;
+    let deathScreen = false;
 function draw() {
     let rand = Math.floor(random(0, 100))
     if(mainCharacter.dead){
         screenSpeed = 0;
     }else{
         x+=screenSpeed ;
-        screenSpeed+=0.01;
+        screenSpeed+=0.005;
+        score++; 
+
     }
     let newX = x % width
     clear();
-    image(background, -newX, 0, width, height);
-    image(background, width-newX, 0, width, height);
+    image(backgroundImage, -newX, 0, width, height);
+    image(backgroundImage, width-newX, 0, width, height);
     mainCharacter.update(rabbit)
     mainCharacter.x = width/4;
-    timer = spawnSpikes(spikeArray, rand, timer);
+    timer = spawnSpikes(spikeArray, rand, timer, score);
     updateAllSpikes(spikeArray, spikeImage);
     checkCollisions(spikeArray, mainCharacter)
     deleteSpikes(spikeArray)
-    score++; 
     text('SCORE: ' + score, 50, 50);
+    deathScreenDisplay()
+}
+
+function restartGame(){
+
+    mainCharacter.dead = false;
+    deathScreen = false;
+
+    spikeArray = [];
+    screenSpeed = 10;
+    score = 0;
+    timer = 0;
+
+    mainCharacter.y = 100;
+    mainCharacter.yVel = 0;
+
+    restartButton.hide();
 }
 
 function keyPressed() {

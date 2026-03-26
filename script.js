@@ -245,7 +245,8 @@ function draw() {
     updateAllSpikes(spikeArray, spikeImage);
     checkCollisions(spikeArray, mainCharacter)
     deleteSpikes(spikeArray)
-    text('SCORE: ' + score, 50, 50);
+    textSize(32)
+    text('SCORE: ' + score, width/2, 50);
     deathScreenDisplay(score)
 }
 

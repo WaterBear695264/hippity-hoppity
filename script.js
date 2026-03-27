@@ -129,13 +129,13 @@ class Egg {
 
 
 function preload() {
-    img = loadImage('/image-removebg-preview.png')
-    backgroundImage = loadImage('/background.jpg')
-    spikeImage = loadImage('/spike.png')
-    rabbit1 = loadImage('/rabbit1.png')
-    rabbit2 = loadImage('/rabbit2.png')
-    rabbit3 = loadImage('/rabbit3.png')
-    rabbit4 = loadImage('/rabbit4.png')
+    img = loadImage('image-removebg-preview.png')
+    backgroundImage = loadImage('background.jpg')
+    spikeImage = loadImage('spike.png')
+    rabbit1 = loadImage('rabbit1.png')
+    rabbit2 = loadImage('rabbit2.png')
+    rabbit3 = loadImage('rabbit3.png')
+    rabbit4 = loadImage('rabbit4.png')
 }
 
 function spawnSpikes(arr, random, timer, score){
